@@ -23,12 +23,19 @@ LOG=timings.txt
 
 echo "=== run $(date '+%F %T')" | tee -a "$LOG"
 
+# mm3d catches Ctrl+C and can still exit 0, so remember it ourselves and stop after the
+# current step. Ctrl+C still reaches mm3d, so the running step stops too.
+INTERRUPTED=0
+trap 'INTERRUPTED=1' INT
+
 step() {                       # step <name> <command...>
   local name=$1; shift
   local t0=$SECONDS rc=0
   "$@" || rc=$?
   local dt=$((SECONDS - t0))
-  printf '%-10s %02d:%02d:%02d  exit=%d\n' "$name" $((dt/3600)) $((dt%3600/60)) $((dt%60)) $rc | tee -a "$LOG"
+  local status="exit=$rc"
+  if [[ $INTERRUPTED == 1 ]]; then status="INTERRUPTED (Ctrl+C)"; rc=130; fi
+  printf '%-10s %02d:%02d:%02d  %s\n' "$name" $((dt/3600)) $((dt%3600/60)) $((dt%60)) "$status" | tee -a "$LOG"
   return $rc
 }
 

@@ -1,0 +1,3 @@
+[submodule "micmac"]
+	path = micmac
+	url = https://github.com/MCHU-1999/micmac.git

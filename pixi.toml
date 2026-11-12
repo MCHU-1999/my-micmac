@@ -1,0 +1,22 @@
+[workspace]
+authors = ["MCHU-1999 <jerry.ee06@nctu.edu.tw>"]
+channels = ["conda-forge"]
+name = "micmac"
+platforms = ["linux-64"]
+version = "0.1.0"
+
+[tasks]
+
+[dependencies]
+cmake = ">=4.4.5,<5"
+make = ">=4.4.1,<5"
+pkg-config = ">=0.29.2,<0.30"
+ccache = ">=4.14.3,<5"
+imagemagick = ">=7.1.2_31,<8"
+exiftool = ">=13.61,<14"
+exiv2 = ">=0.28.9,<0.29"
+proj = ">=9.9.0,<10"
+xorg-libx11 = ">=1.8.14,<2"
+qt-main = "5.15.*"
+cxx-compiler = ">=2.0.0,<3"
+c-compiler = ">=2.0.0,<3"

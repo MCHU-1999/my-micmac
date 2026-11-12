@@ -6,6 +6,11 @@ platforms = ["linux-64"]
 version = "0.1.0"
 
 [tasks]
+configure = "cmake -S micmac -B micmac/build -DWITH_QT5=1 -DWITH_CCACHE=ON -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_FLAGS_RELEASE=\"-O3 -DNDEBUG -Wno-template-body -Wno-error\""
+build = { cmd = "cmake --build micmac/build --target install -j 16", depends-on = ["configure"] }
+
+[activation.env]
+PATH = "$PIXI_PROJECT_ROOT/micmac/bin:$PATH"
 
 [dependencies]
 cmake = ">=4.4.5,<5"

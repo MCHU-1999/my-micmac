@@ -1,0 +1,24 @@
+{
+  "pipeline": [
+    {
+      "type": "readers.ply",
+      "filename": "/home/MCHu/Documents/projects/Toulouse_EO/results/C3DC_MicMac.ply"
+    },
+    {
+      "type": "filters.transformation",
+      "matrix": "1 0 0 574000  0 1 0 6276000  0 0 1 0  0 0 0 1"
+    },
+    {
+      "type": "writers.gdal",
+      "filename": "dsm_from_c3dc.tif",
+      "override_srs": "EPSG:2154",
+      "resolution": 0.1,
+      "binmode": true,
+      "output_type": "max",
+      "window_size": 0,
+      "nodata": -9999,
+      "data_type": "float32",
+      "gdalopts": "COMPRESS=DEFLATE,TILED=YES"
+    }
+  ]
+}

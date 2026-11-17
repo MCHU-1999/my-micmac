@@ -44,6 +44,6 @@ step Tapioca   mm3d Tapioca File overlap.xml 2000
 step C3DC      mm3d C3DC MicMac "$PAT" "$ORI" OffsetPly="$OFFSET"
 step DSM       mm3d PIMs2Mnt MicMac
 step Ortho     mm3d PIMs2Mnt MicMac DoMnt=0 DoOrtho=1 Purge=0
-step Tawny     mm3d Tawny PIMs-ORTHO/
+step Tawny     mm3d Tawny PIMs-ORTHO/ RadiomEgal=0
 
 echo "=== done $(date '+%F %T')" | tee -a "$LOG"

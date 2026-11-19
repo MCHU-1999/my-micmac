@@ -13,7 +13,8 @@
 #
 # Step 1 writes  <project_dir>/results/DSM.tif :
 #   Float32, Z in metres, 10 cm pixels, EPSG:2154 (Lambert-93), nodata = -9999
-#   (pixels where PIMs-Merged_Masq.tif is 0), DEFLATE-compressed, tiled, with overviews.
+#   (pixels where PIMs-Merged_Masq.tif is 0 or fewer than 15 depth maps contributed,
+#   per PIMs-Merged_Cptr.tif), DEFLATE-compressed, tiled, with overviews.
 # Step 2 writes  <project_dir>/results/Ortho.tif  from Tawny's PIMs-ORTHO/Orthophotomosaic.tif
 #   (skipped if Tawny hasn't run): RGB, EPSG:2154, DEFLATE, tiled, BigTIFF, with overviews.
 #   Tawny writes mosaics over 20000 px as a MicMac split TIFF (a header GDAL can't read plus
@@ -51,26 +52,28 @@ cd "$PROJ"
 BASC=PIMs-TmpBasc
 PROF=$BASC/PIMs-Merged_Prof.tif
 MASQ=$BASC/PIMs-Merged_Masq.tif
+CPTR=$BASC/PIMs-Merged_Cptr.tif
+MIN_CPTR=15         # keep only cells where at least this many depth maps agreed
 OUT=results/DSM.tif
 
 # ---- step 1: DSM -> GeoTIFF ------------------------------------------------
 if [[ -f "$OUT" ]]; then
   echo "== $OUT already exists, skipping conversion"
 else
-  for f in "$PROF" "${PROF%.tif}.tfw" "$MASQ"; do
+  for f in "$PROF" "${PROF%.tif}.tfw" "$MASQ" "$CPTR"; do
     [[ -f "$f" ]] || { echo "Missing $PROJ/$f - did PIMs2Mnt finish?" >&2; exit 1; }
   done
   mkdir -p results
   TMP=results/DSM.tmp.tif
   rm -f "$TMP"
 
-  echo "== Masking DSM and writing $TMP (2.6 GB in, takes a few minutes)"
+  echo "== Masking DSM (Masq > 0 and Cptr >= $MIN_CPTR) and writing $TMP (2.6 GB in, takes a few minutes)"
   # GDAL reads the georeferencing from PIMs-Merged_Prof.tfw automatically;
   # gdal_calc copies it from input A to the output.
   gdal_calc \
-    -A "$PROF" -B "$MASQ" \
-    --calc="numpy.where(B > 0, A, $NODATA)" \
-    --type=Float32 --NoDataValue=$NODATA --hideNoData \
+    -A "$PROF" -B "$MASQ" -C "$CPTR" \
+    --calc="numpy.where((B > 0) & (C >= $MIN_CPTR), A, $NODATA)" \
+    --type=Float32 --NoDataValue=$NODATA \
     --co COMPRESS=DEFLATE --co PREDICTOR=3 --co TILED=YES --co BIGTIFF=IF_SAFER \
     --outfile="$TMP"
 

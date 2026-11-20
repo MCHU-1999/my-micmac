@@ -1,0 +1,16 @@
+[
+  "/home/MCHu/Documents/projects/Toulouse_EO/results/C3DC_MicMac.ply",
+  {
+    "type": "filters.transformation",
+    "matrix": "1 0 0 574000  0 1 0 6276000  0 0 1 0  0 0 0 1"
+  },
+  {
+    "type": "filters.crop",
+    "bounds": "([573999.75,574999.75],[6276000.25,6277000.25])"
+  },
+  {
+    "type": "writers.ply",
+    "filename": "cloud_clip_L93.ply",
+    "storage_mode": "little endian"
+  }
+]

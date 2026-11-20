@@ -1,0 +1,12 @@
+[
+"/home/MCHu/Documents/projects/Toulouse_EO/results/C3DC_MicMac.ply",
+  {
+    "type": "filters.crop",
+    "bounds": "([-0.25,999.75],[0.25,1000.25])"
+  },
+  {
+    "type": "writers.ply",
+    "filename": "cloud_clip_local.ply",
+    "storage_mode": "little endian"
+  }
+]
